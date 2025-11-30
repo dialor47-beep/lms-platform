@@ -1,36 +1,124 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Plataforma LMS Empresarial
 
-## Getting Started
+Sistema de gestión de aprendizaje (LMS) para capacitación empresarial.
 
-First, run the development server:
+## 🚀 Estado del Proyecto
+
+**Fase actual**: Desarrollo inicial - Infraestructura base completada
+
+Ver [PROGRESS.md](./PROGRESS.md) para detalles completos del progreso.
+
+## 📋 Características Principales
+
+- 🔐 **Autenticación** - Login, registro, recuperación de contraseña
+- 📚 **Gestión de Cursos** - CRUD completo con materiales multimedia
+- 📄 **Documentos** - Soporte para PDF, Word, Excel, PowerPoint
+- 🎥 **Videos** - Reproductor integrado y enlaces de YouTube
+- ✅ **Quizzes** - Evaluaciones con calificación automática
+- 🎓 **Certificados** - Generación automática al aprobar
+- 📅 **Calendario** - Eventos de clases y reuniones
+- 🎯 **Google Meet** - Integración para reuniones virtuales
+- 👨‍💼 **Panel Admin** - Gestión completa de usuarios y cursos
+- 📊 **Reportes** - Estadísticas y progreso de estudiantes
+
+## 🛠️ Stack Tecnológico
+
+- **Frontend**: Next.js 14, React, TypeScript, Tailwind CSS
+- **Backend**: Supabase (PostgreSQL, Auth, Storage)
+- **Estado**: Zustand
+- **Formularios**: React Hook Form + Zod
+- **UI**: Lucide React (iconos)
+- **Deployment**: Vercel (frontend), Supabase Cloud (backend)
+
+## 📦 Instalación
 
 ```bash
+# Clonar el repositorio
+cd lms-platform
+
+# Instalar dependencias
+npm install
+
+# Configurar variables de entorno
+cp env.example .env.local
+# Editar .env.local con tus credenciales de Supabase
+
+# Ejecutar en desarrollo
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Abrir [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🗄️ Configuración de Supabase
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Crear cuenta en [supabase.com](https://supabase.com)
+2. Crear nuevo proyecto
+3. Copiar URL y anon key a `.env.local`
+4. Ejecutar migraciones SQL (próximamente)
 
-## Learn More
+## 📁 Estructura del Proyecto
 
-To learn more about Next.js, take a look at the following resources:
+```
+lms-platform/
+├── app/                    # App Router de Next.js
+│   ├── (auth)/            # Rutas de autenticación
+│   ├── (dashboard)/       # Dashboard de estudiante
+│   ├── (admin)/           # Panel administrativo
+│   └── api/               # API routes
+├── components/            # Componentes React
+│   ├── ui/               # Componentes UI base
+│   ├── auth/             # Componentes de autenticación
+│   ├── course/           # Componentes de cursos
+│   ├── quiz/             # Componentes de quizzes
+│   └── calendar/         # Componentes de calendario
+├── lib/                   # Utilidades y configuración
+│   ├── supabase/         # Clientes de Supabase
+│   ├── utils/            # Funciones auxiliares
+│   └── hooks/            # Custom hooks
+└── public/               # Archivos estáticos
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🎯 Cursos Iniciales
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Inducción y Reinducción
+2. Gobierno Digital
+3. Seguridad y Salud en el Trabajo
+4. Gestión de Calidad
+5. Atención al Usuario
+6. Modelo Integrado de Planeación y Gestión (MIPG)
 
-## Deploy on Vercel
+## 🔗 Integración en Sitios Web
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Iframe
+```html
+<iframe src="https://tu-lms.vercel.app/embed/course/123" 
+        width="100%" height="600px"></iframe>
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Enlace Directo
+```
+https://tu-lms.vercel.app/courses/induccion
+```
+
+## 📝 Próximos Pasos
+
+- [ ] Implementar autenticación completa
+- [ ] Crear schema de base de datos
+- [ ] Desarrollar componentes UI base
+- [ ] Construir dashboard de estudiante
+- [ ] Implementar gestión de cursos
+- [ ] Agregar sistema de quizzes
+- [ ] Integrar calendario y reuniones
+
+## 📄 Licencia
+
+Proyecto privado para uso empresarial.
+
+## 👤 Desarrollador
+
+Desarrollado por Antigravity AI
+
+---
+
+**Versión**: 0.1.0 (En desarrollo)  
+**Última actualización**: 30 de noviembre de 2025
