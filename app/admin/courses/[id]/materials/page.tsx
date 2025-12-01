@@ -1,7 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 import { MaterialUpload } from './material-upload'
 import { MaterialList } from './material-list'
