@@ -1,9 +1,8 @@
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
-import { cookies } from 'next/headers'
+import { createClient } from '@/lib/supabase/server'
 import { BookOpen, Users, CheckCircle, FileText } from 'lucide-react'
 
 export default async function AdminDashboard() {
-    const supabase = createServerComponentClient({ cookies })
+    const supabase = await createClient()
 
     // Get statistics
     const [

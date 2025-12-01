@@ -1,11 +1,10 @@
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
-import { cookies } from 'next/headers'
+import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
-import { Plus, Edit, Trash2, Eye, EyeOff } from 'lucide-react'
+import { Plus, Edit, Trash2, Eye, EyeOff, BookOpen } from 'lucide-react'
 import { CourseActions } from './course-actions'
 
 export default async function AdminCoursesPage() {
-    const supabase = createServerComponentClient({ cookies })
+    const supabase = await createClient()
 
     const { data: courses } = await supabase
         .from('courses')

@@ -1,6 +1,6 @@
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
-import { cookies } from 'next/headers'
+import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
+import Link from 'next/link'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 import { MaterialUpload } from './material-upload'
@@ -11,7 +11,7 @@ export default async function CourseMaterialsPage({
 }: {
     params: { id: string }
 }) {
-    const supabase = createServerComponentClient({ cookies })
+    const supabase = await createClient()
 
     // Get course
     const { data: course } = await supabase
