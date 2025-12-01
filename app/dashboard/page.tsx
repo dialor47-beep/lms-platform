@@ -90,13 +90,21 @@ export default function DashboardPage() {
 
             {/* Main Content */}
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                <div className="mb-8">
-                    <h2 className="text-3xl font-bold text-gray-900 mb-2">
-                        Mis Cursos
-                    </h2>
-                    <p className="text-gray-600">
-                        Explora y accede a tus cursos de capacitación
-                    </p>
+                <div className="mb-8 flex items-center justify-between">
+                    <div>
+                        <h2 className="text-3xl font-bold text-gray-900 mb-2">
+                            Mis Cursos
+                        </h2>
+                        <p className="text-gray-600">
+                            Explora y accede a tus cursos de capacitación
+                        </p>
+                    </div>
+                    <button
+                        onClick={() => router.push('/courses')}
+                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                    >
+                        Ver Todos los Cursos
+                    </button>
                 </div>
 
                 {loading ? (
@@ -129,7 +137,7 @@ export default function DashboardPage() {
                             <div
                                 key={course.id}
                                 className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden cursor-pointer"
-                                onClick={() => router.push(`/dashboard/courses/${course.id}`)}
+                                onClick={() => router.push(`/courses/${course.id}`)}
                             >
                                 <div className="h-48 bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
                                     <svg className="h-16 w-16 text-white opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
