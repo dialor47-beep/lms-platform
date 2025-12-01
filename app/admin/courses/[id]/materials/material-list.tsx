@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { createBrowserClient } from '@supabase/ssr'
 import { FileText, Video, Link as LinkIcon, Trash2, Download } from 'lucide-react'
 
 interface Material {
@@ -38,7 +38,10 @@ const getTypeLabel = (type: string) => {
 
 export function MaterialList({ materials, courseId }: { materials: Material[], courseId: string }) {
     const router = useRouter()
-    const supabase = createClientComponentClient()
+    const supabase = createBrowserClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    )
 
     const handleDelete = async (materialId: string, title: string) => {
         if (!confirm(`¿Estás seguro de eliminar "${title}"?`)) {

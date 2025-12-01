@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { createBrowserClient } from '@supabase/ssr'
 import { Edit, Trash2, FileText, Eye, EyeOff } from 'lucide-react'
 import { useState } from 'react'
 
@@ -13,7 +13,10 @@ interface Course {
 
 export function CourseActions({ course }: { course: Course }) {
     const router = useRouter()
-    const supabase = createClientComponentClient()
+    const supabase = createBrowserClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    )
     const [isDeleting, setIsDeleting] = useState(false)
     const [isToggling, setIsToggling] = useState(false)
 
@@ -74,8 +77,8 @@ export function CourseActions({ course }: { course: Course }) {
                 onClick={handleTogglePublish}
                 disabled={isToggling}
                 className={`inline-flex items-center gap-1 rounded-lg px-3 py-1.5 text-sm font-medium ${course.is_published
-                        ? 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                        : 'bg-green-100 text-green-700 hover:bg-green-200'
+                    ? 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    : 'bg-green-100 text-green-700 hover:bg-green-200'
                     }`}
                 title={course.is_published ? 'Despublicar' : 'Publicar'}
             >

@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { createBrowserClient } from '@supabase/ssr'
 import { Upload, Link as LinkIcon, FileText, Video } from 'lucide-react'
 
 const materialTypes = [
@@ -16,7 +16,10 @@ const materialTypes = [
 
 export function MaterialUpload({ courseId }: { courseId: string }) {
     const router = useRouter()
-    const supabase = createClientComponentClient()
+    const supabase = createBrowserClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    )
     const [isUploading, setIsUploading] = useState(false)
     const [formData, setFormData] = useState({
         title: '',
