@@ -7,15 +7,16 @@ import { CourseDetailClient } from './course-detail-client'
 export default async function CourseDetailPage({
     params,
 }: {
-    params: { id: string }
+    params: Promise<{ id: string }>
 }) {
+    const { id } = await params
     const supabase = await createClient()
 
     // Get course
     const { data: course } = await supabase
         .from('courses')
         .select('*')
-        .eq('id', params.id)
+        .eq('id', id)
         .eq('is_published', true)
         .single()
 
@@ -27,7 +28,7 @@ export default async function CourseDetailPage({
     const { data: materials } = await supabase
         .from('course_materials')
         .select('*')
-        .eq('course_id', params.id)
+        .eq('course_id', id)
         .order('order', { ascending: true })
 
     return (

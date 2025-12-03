@@ -8,15 +8,16 @@ import { MaterialList } from './material-list'
 export default async function CourseMaterialsPage({
     params,
 }: {
-    params: { id: string }
+    params: Promise<{ id: string }>
 }) {
+    const { id } = await params
     const supabase = await createClient()
 
     // Get course
     const { data: course } = await supabase
         .from('courses')
         .select('*')
-        .eq('id', params.id)
+        .eq('id', id)
         .single()
 
     if (!course) {
@@ -27,7 +28,7 @@ export default async function CourseMaterialsPage({
     const { data: materials } = await supabase
         .from('course_materials')
         .select('*')
-        .eq('course_id', params.id)
+        .eq('course_id', id)
         .order('order', { ascending: true })
 
     return (
@@ -50,12 +51,12 @@ export default async function CourseMaterialsPage({
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Upload Section */}
                 <div>
-                    <MaterialUpload courseId={params.id} />
+                    <MaterialUpload courseId={id} />
                 </div>
 
                 {/* Materials List */}
                 <div>
-                    <MaterialList materials={materials || []} courseId={params.id} />
+                    <MaterialList materials={materials || []} courseId={id} />
                 </div>
             </div>
         </div>
