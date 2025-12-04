@@ -29,7 +29,7 @@ export default async function CourseDetailPage({
         .from('course_materials')
         .select('*')
         .eq('course_id', id)
-        .order('order', { ascending: true })
+        .order('order_index', { ascending: true })
 
     return (
         <div className="min-h-screen bg-gray-50">

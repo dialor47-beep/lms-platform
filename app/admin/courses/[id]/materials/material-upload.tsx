@@ -63,12 +63,12 @@ export function MaterialUpload({ courseId }: { courseId: string }) {
             // Get current max order
             const { data: materials } = await supabase
                 .from('course_materials')
-                .select('order')
+                .select('order_index')
                 .eq('course_id', courseId)
-                .order('order', { ascending: false })
+                .order('order_index', { ascending: false })
                 .limit(1)
 
-            const nextOrder = materials && materials.length > 0 ? materials[0].order + 1 : 1
+            const nextOrder = materials && materials.length > 0 ? materials[0].order_index + 1 : 1
 
             // Insert material
             const { error } = await supabase
@@ -79,7 +79,7 @@ export function MaterialUpload({ courseId }: { courseId: string }) {
                     type: formData.type,
                     file_url: fileUrl,
                     external_link: formData.type === 'video' || formData.type === 'link' ? formData.external_link : null,
-                    order: nextOrder,
+                    order_index: nextOrder,
                 })
 
             if (error) throw error

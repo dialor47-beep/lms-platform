@@ -29,7 +29,7 @@ export default async function CourseMaterialsPage({
         .from('course_materials')
         .select('*')
         .eq('course_id', id)
-        .order('order', { ascending: true })
+        .order('order_index', { ascending: true })
 
     return (
         <div className="max-w-5xl">
