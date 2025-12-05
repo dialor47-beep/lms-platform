@@ -1,7 +1,8 @@
 'use client'
 
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { createBrowserClient } from '@supabase/ssr'
+import { getSupabaseBrowserClient } from '@/lib/supabase-client'
 import { FileText, Video, Link as LinkIcon, Trash2, Download } from 'lucide-react'
 
 interface Material {
@@ -38,29 +39,42 @@ const getTypeLabel = (type: string) => {
 
 export function MaterialList({ materials, courseId }: { materials: Material[], courseId: string }) {
     const router = useRouter()
-    const supabase = createBrowserClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    )
+    const supabase = getSupabaseBrowserClient()
+    const [deletingId, setDeletingId] = useState<string | null>(null)
 
-    const handleDelete = async (materialId: string, title: string) => {
-        if (!confirm(`¿Estás seguro de eliminar "${title}"?`)) {
-            return
-        }
+    const handleDeleteClick = (materialId: string) => {
+        setDeletingId(materialId)
+    }
+
+    const handleConfirmDelete = async () => {
+        if (!deletingId) return
 
         try {
+            console.log('Deleting material:', deletingId)
+
             const { error } = await supabase
                 .from('course_materials')
                 .delete()
-                .eq('id', materialId)
+                .eq('id', deletingId)
 
-            if (error) throw error
+            if (error) {
+                console.error('Delete error:', error)
+                throw new Error(`Error al eliminar: ${error.message}`)
+            }
 
+            console.log('Material deleted successfully')
+            setDeletingId(null)
             router.refresh()
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error deleting material:', error)
-            alert('Error al eliminar el material')
+            const errorMessage = error?.message || JSON.stringify(error)
+            alert(`Error al eliminar el material: ${errorMessage}`)
+            setDeletingId(null)
         }
+    }
+
+    const handleCancelDelete = () => {
+        setDeletingId(null)
     }
 
     if (!materials || materials.length === 0) {
@@ -82,11 +96,40 @@ export function MaterialList({ materials, courseId }: { materials: Material[], c
         )
     }
 
+    const materialToDelete = materials.find(m => m.id === deletingId)
+
     return (
         <div className="bg-white shadow rounded-lg p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4">
                 Materiales del Curso ({materials.length})
             </h2>
+
+            {deletingId && materialToDelete && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+                        <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                            Confirmar eliminación
+                        </h3>
+                        <p className="text-sm text-gray-600 mb-6">
+                            ¿Estás seguro de eliminar "{materialToDelete.title}"?
+                        </p>
+                        <div className="flex gap-3 justify-end">
+                            <button
+                                onClick={handleCancelDelete}
+                                className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200"
+                            >
+                                Cancelar
+                            </button>
+                            <button
+                                onClick={handleConfirmDelete}
+                                className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700"
+                            >
+                                Eliminar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             <div className="space-y-3">
                 {materials.map((material) => {
@@ -134,7 +177,7 @@ export function MaterialList({ materials, courseId }: { materials: Material[], c
                                     </a>
                                 )}
                                 <button
-                                    onClick={() => handleDelete(material.id, material.title)}
+                                    onClick={() => handleDeleteClick(material.id)}
                                     className="inline-flex items-center gap-1 rounded-lg bg-red-100 px-3 py-1.5 text-sm font-medium text-red-700 hover:bg-red-200"
                                 >
                                     <Trash2 className="h-4 w-4" />

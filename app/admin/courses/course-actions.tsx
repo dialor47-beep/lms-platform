@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { createBrowserClient } from '@supabase/ssr'
+import { getSupabaseBrowserClient } from '@/lib/supabase-client'
 import { Edit, Trash2, FileText, Eye, EyeOff } from 'lucide-react'
 import { useState } from 'react'
 
@@ -13,10 +13,7 @@ interface Course {
 
 export function CourseActions({ course }: { course: Course }) {
     const router = useRouter()
-    const supabase = createBrowserClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    )
+    const supabase = getSupabaseBrowserClient()
     const [isDeleting, setIsDeleting] = useState(false)
     const [isToggling, setIsToggling] = useState(false)
 

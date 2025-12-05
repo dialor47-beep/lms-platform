@@ -2,8 +2,8 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { createBrowserClient } from '@supabase/ssr'
 import { Upload, Link as LinkIcon, FileText, Video } from 'lucide-react'
+import { getSupabaseBrowserClient } from '@/lib/supabase-client'
 
 const materialTypes = [
     { value: 'pdf', label: 'PDF', icon: FileText },
@@ -16,10 +16,7 @@ const materialTypes = [
 
 export function MaterialUpload({ courseId }: { courseId: string }) {
     const router = useRouter()
-    const supabase = createBrowserClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    )
+    const supabase = getSupabaseBrowserClient()
     const [isUploading, setIsUploading] = useState(false)
     const [formData, setFormData] = useState({
         title: '',
@@ -43,20 +40,29 @@ export function MaterialUpload({ courseId }: { courseId: string }) {
 
             // Upload file if it's a file type
             if (['pdf', 'word', 'excel', 'ppt'].includes(formData.type) && formData.file) {
+                console.log('Uploading file:', formData.file.name)
                 const fileExt = formData.file.name.split('.').pop()
                 const fileName = `${Date.now()}.${fileExt}`
                 const filePath = `${courseId}/${fileName}`
 
-                const { error: uploadError } = await supabase.storage
+                console.log('Upload path:', filePath)
+
+                const { data: uploadData, error: uploadError } = await supabase.storage
                     .from('course-materials')
                     .upload(filePath, formData.file)
 
-                if (uploadError) throw uploadError
+                if (uploadError) {
+                    console.error('Upload error details:', uploadError)
+                    throw new Error(`Error al subir archivo: ${uploadError.message}`)
+                }
+
+                console.log('Upload successful:', uploadData)
 
                 const { data: { publicUrl } } = supabase.storage
                     .from('course-materials')
                     .getPublicUrl(filePath)
 
+                console.log('Public URL:', publicUrl)
                 fileUrl = publicUrl
             }
 
@@ -70,6 +76,8 @@ export function MaterialUpload({ courseId }: { courseId: string }) {
 
             const nextOrder = materials && materials.length > 0 ? materials[0].order_index + 1 : 1
 
+            console.log('Inserting material with order:', nextOrder)
+
             // Insert material
             const { error } = await supabase
                 .from('course_materials')
@@ -82,7 +90,10 @@ export function MaterialUpload({ courseId }: { courseId: string }) {
                     order_index: nextOrder,
                 })
 
-            if (error) throw error
+            if (error) {
+                console.error('Insert error:', error)
+                throw new Error(`Error al guardar material: ${error.message}`)
+            }
 
             // Reset form
             setFormData({
@@ -92,10 +103,12 @@ export function MaterialUpload({ courseId }: { courseId: string }) {
                 external_link: '',
             })
 
+            alert('Material agregado exitosamente')
             router.refresh()
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error uploading material:', error)
-            alert('Error al subir el material')
+            const errorMessage = error?.message || JSON.stringify(error)
+            alert(`Error al subir el material: ${errorMessage}`)
         } finally {
             setIsUploading(false)
         }

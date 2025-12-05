@@ -2,7 +2,7 @@
 
 import { usePathname, useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { createBrowserClient } from '@supabase/ssr'
+import { getSupabaseBrowserClient } from '@/lib/supabase-client'
 import {
     LayoutDashboard,
     BookOpen,
@@ -26,10 +26,7 @@ export default function AdminLayout({
 }) {
     const pathname = usePathname()
     const router = useRouter()
-    const supabase = createBrowserClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    )
+    const supabase = getSupabaseBrowserClient()
     const [sidebarOpen, setSidebarOpen] = useState(false)
 
     const handleLogout = async () => {
